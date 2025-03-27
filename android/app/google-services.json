@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "651157417957",
+    "project_id": "easy-save-49d86",
+    "storage_bucket": "easy-save-49d86.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651157417957:android:37f6e26105e8f920db490c",
+        "android_client_info": {
+          "package_name": "com.example.easy_save"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651157417957-bjsjr7pdgrrbl8bq28o7oq0v66j6d3sp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.easy_save",
+            "certificate_hash": "c5cc57137f4ea9ef8b0768cd70dd836a223f9278"
+          }
+        },
+        {
+          "client_id": "651157417957-l1otqf9vsap47idisrt38rkvf1k8it10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_kHyWZcpMcZ8t-V3v7PVmANbursrhmWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651157417957-l1otqf9vsap47idisrt38rkvf1k8it10.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "651157417957-ih473vg0oef01mjk7v3a62iju3lsc5cu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.easySaves"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651157417957:android:1d1c59abed48526edb490c",
+        "android_client_info": {
+          "package_name": "com.example.easy_saves"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651157417957-l1otqf9vsap47idisrt38rkvf1k8it10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_kHyWZcpMcZ8t-V3v7PVmANbursrhmWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "651157417957-l1otqf9vsap47idisrt38rkvf1k8it10.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "651157417957-ih473vg0oef01mjk7v3a62iju3lsc5cu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.easySaves"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
