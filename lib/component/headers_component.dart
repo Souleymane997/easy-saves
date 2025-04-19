@@ -58,18 +58,11 @@ class SortPacket extends StatelessWidget {
               onPressed: (){},
               child: Row(
                 children: [
-                  Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Icon(Icons.sort , color: noir(), size: 30,)
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: CustomText(
-                      "Filtrer ",
-                      color: noir(),
-                      tex: TailleText(context).soustitre,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  CustomText(
+                    "Filtrer",
+                    color: noir(),
+                    tex: TailleText(context).soustitre,
+                    fontWeight: FontWeight.w700,
                   ),
                 ],
               ),

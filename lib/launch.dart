@@ -91,7 +91,7 @@ class _LaunchPageState extends State<LaunchPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50.0),
                         image: const DecorationImage(
-                          image: AssetImage('assets/icon/logo.png'),
+                          image: AssetImage('assets/icon/log.png'),
                           fit: BoxFit.contain,
                         )),
                   ),

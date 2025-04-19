@@ -1,5 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:async';
+
 import 'package:easy_saves/controllers/cours_controller.dart';
 import 'package:easy_saves/models/cours_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   List<int> listPos = [] ;
   late EasyRefreshController _controller;
   final FocusNode _focusNode = FocusNode();
+  bool isLoad = true ;
 
 
 
@@ -42,6 +45,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     getListCours();
+    loadPage() ;
     _controller = EasyRefreshController();
     _controller = EasyRefreshController();
     _focusNode.addListener(() {
@@ -50,6 +54,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -61,7 +66,22 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: noir(),
-      body: Stack(children: [
+      body: isLoad
+          ? Center(
+        child: SizedBox(
+          width: 100,
+          height: 80,
+          child: Center(
+            child: SpinKitCircle(
+              color: orange(),
+              size: 30.0,
+            ),
+          ),
+        ),
+      )
+          :
+
+      Stack(children: [
         const Background(),
         GestureDetector(
           onTap: () {
@@ -116,7 +136,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(child: EasyRefresh(
                   controller: _controller,
                   onRefresh: _onRefresh,
-                  onLoad: _onLoadMore,
+                  header: MaterialHeader(color: orange()),
                   child: GridCours(listCours: filteredCours, listID: searchListID,))),
             ],
           ),
@@ -128,6 +148,17 @@ class _HomePageState extends State<HomePage> {
 
 
   /* *************************************************/
+
+  loadPage() {
+    Timer(Duration(milliseconds: 500), () {
+      setState(() {
+        isLoad = false ;
+      });
+      //print("5 secondes écoulées !");
+    });
+  }
+
+
 
     filterCours(String query) {
     setState(() {
@@ -211,10 +242,6 @@ class _HomePageState extends State<HomePage> {
       _controller.finishRefresh();
     }
 
-    Future<void> _onLoadMore() async {
-      await Future.delayed(Duration(seconds: 2));
-      _controller.finishLoad(listCours.length < 30 ? IndicatorResult.success : IndicatorResult.noMore);
-    }
 
     Future<void> _autoRefresh() async {
       await Future.delayed(Duration(milliseconds: 500));
@@ -289,15 +316,22 @@ class GridCours extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (listCours.isEmpty || listID.isEmpty){
-      return Padding(
-        padding: EdgeInsets.all(5.0),
-        child: Center(
-          child: SpinKitCircle(
-            color: orange(),
-            size: 30.0,
+      return Center(child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 100,
+            height: 90,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50.0),
+                image: const DecorationImage(
+                  image: AssetImage('assets/icon/trash.png'),
+                  fit: BoxFit.contain,
+                )),
           ),
-        ),
-      );
+          CustomText("Votre Liste de Cours est vide"),
+        ],
+      )); //
     }
 
     return GridView.builder(
@@ -368,7 +402,7 @@ class FloatingButton extends StatelessWidget {
           onPressed: () {
             showNewsCours(context);
           },
-          backgroundColor: orange(),
+          backgroundColor: orangeFonce(),
           child: Center(
             child: Icon(
               Icons.add_circle,

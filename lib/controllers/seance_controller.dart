@@ -10,6 +10,40 @@ class SeanceController {
   User? get currentUser => _auth.currentUser;
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
+  Future<List<SeanceModel>> getListTri(String? idCours , String dateDebut , String dateFin) async {
+      List<SeanceModel> result = [];
+
+      print(dateDebut) ;
+      print(dateFin) ;
+      try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('Seance')
+          .where('idCours', isEqualTo: idCours)
+          .where('date', isGreaterThanOrEqualTo: dateDebut)
+          .where('date', isLessThanOrEqualTo: dateFin)
+          .get();
+
+          if (querySnapshot.docs.isNotEmpty) {
+          // Extraction des documents
+          List<Map<String, dynamic>> documents = querySnapshot.docs.map((doc) {
+          return doc.data() as Map<String, dynamic>;
+          }).toList();
+
+          // Conversion en objets AppUserData
+          result = documents.map((e) => SeanceModel.fromJson(e)).toList();
+          //print(result.first.idCours);
+          return result ;
+
+      } else {
+          print("0 Seance .");
+          return result ;
+      }
+      } catch (e) {
+          print("Erreur : $e");
+      }
+      return result ;
+  }
+
   Future<List<SeanceModel>> getListSeance(String? idCours) async {
     List<SeanceModel> result = [];
     try {
@@ -40,7 +74,9 @@ class SeanceController {
   }
 
 
-  Future<List<String>> getListIDSeance(String? idCours) async {
+
+
+  Future<List<String>> getListIDSeance(String? idCours ) async {
     List<String> result = [];
     QuerySnapshot querySnapshot ;
     try {
@@ -65,7 +101,25 @@ class SeanceController {
     return result ;
   }
 
+  Future<bool> updateSeance(String seanceId, int newDuree, String newDate) async {
+    try {
+        User? user = FirebaseAuth.instance.currentUser;
 
+        if (user == null) {
+          throw Exception("Utilisateur non connecté !");
+        }
+        FirebaseFirestore firestore = FirebaseFirestore.instance;
+        await firestore.collection('Seance').doc(seanceId).update({
+          'duree': newDuree,
+          'date': newDate,
+        }) ;
+        print("Séance mise à jour avec succès !");
+        return true ;
+    } catch (error) {
+      print(" Erreur lors de l'ajout dee la seance : $error");
+      return false ;
+    }
+  }
 
   Future<bool> addSeance(SeanceModel item ) async {
     try {
@@ -90,8 +144,6 @@ class SeanceController {
       return false ;
     }
   }
-
-
 
   Future<bool> deleteSeance(String idSeance ) async {
     try {

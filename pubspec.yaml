@@ -49,6 +49,8 @@ dependencies:
   email_otp: ^3.0.2
   adaptive_action_sheet: ^2.0.4
   easy_refresh: ^3.3.2
+  intl: ^0.18.0  # Assurez-vous d'avoir la dernière version
+
 
 
 

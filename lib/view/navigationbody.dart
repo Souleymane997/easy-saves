@@ -9,8 +9,9 @@ import 'home/home.dart';
 import 'recette/switch.dart';
 
 class NavigationPage extends StatefulWidget {
-  NavigationPage({Key? key, this.value}) : super(key: key);
+  NavigationPage({Key? key, this.value , this.date}) : super(key: key);
   int? value;
+  DateTime? date ;
 
   @override
   State<NavigationPage> createState() => _NavigationPageState();
@@ -33,7 +34,7 @@ class _NavigationPageState extends State<NavigationPage> {
     } else {
       _selectedIndex = 0;
     }
-    screens = [const HomePage(), const SwitchPage(), const AccountPage()];
+    screens = [const HomePage(), SwitchPage(date: widget.date?? DateTime.now(),), const AccountPage()];
     super.initState();
   }
 

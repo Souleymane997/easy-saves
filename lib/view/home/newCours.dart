@@ -108,6 +108,9 @@ class _NewCoursPageState extends State<NewCoursPage> {
                             direction: AxisDirection.left),
                       );
                     }
+                    else{
+                      Navigator.pop(context) ;
+                    }
                   });
                   },
                   style: ButtonStyle(
@@ -155,21 +158,37 @@ class _NewCoursPageState extends State<NewCoursPage> {
 
   // verifie les champs de saisie
   Future<bool> validateAndSave() async {
+
     if (intituleController.text.isNotEmpty &&
         tarifController.text.isNotEmpty &&
         phoneParentController.text.isNotEmpty) {
 
+      bool checked = await CoursController().addCourseWithTransaction(intituleController.text) ;
 
-      CoursModel newCours = CoursModel(idUser:user!.uid, titre: intituleController.text, prix: int.parse(tarifController.text),
-          numParent: phoneParentController.text) ;
+      print(intituleController.text) ;
+      print(checked) ;
 
-      bool res = await CoursController().addCours(newCours) ;
-      if (res) {
-        return true;
-      } else {
-        DInfo.toastError("une erreur est survenue !");
+      if(checked == true ){
+        DInfo.toastError("Ce Cours existe déjà ! Changez le titre svp  ");
         return false;
       }
+      else{
+
+
+        print("entrre ici iiiii") ;
+        CoursModel newCours = CoursModel(idUser:user!.uid, titre: intituleController.text, prix: int.parse(tarifController.text),
+            numParent: phoneParentController.text , archive: false) ;
+
+        bool res = await CoursController().addCours(newCours) ;
+        if (res) {
+          return true;
+        } else {
+          DInfo.toastError("une erreur est survenue !");
+          return false;
+        }
+
+      }
+
     } else {
       DInfo.toastError("Remplissez les champs svp !");
       return false;

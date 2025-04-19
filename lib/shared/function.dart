@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'custom_text.dart';
 import 'colors.dart';
+import 'package:intl/intl.dart';
 
 //* function de select ...
 DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
@@ -66,8 +67,8 @@ void loadPop(BuildContext context) {
             width: 100,
             height: 80,
             child: SpinKitFadingCircle(
-              color: Colors.white,
-              size: 50.0,
+              color: orange(),
+              size: 30.0,
           ),
         ),
       );
@@ -100,9 +101,26 @@ String formatMonthDay(DateTime date) {
   return '${monthName(date.month)} ${date.day}';
 }
 
+DateTime parseDate(String dateString) {
+  return DateFormat('yyyy-MM-dd').parse(dateString);
+}
+
+String formatDate(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
+}
+
+String newFormat(DateTime date) {
+  return DateFormat.yMMM().format(date);
+}
+
 String formatDayMonthYear(DateTime date) {
   // Converts DateTime to a "Month Day" format (e.g., Jan 1)
   return '${date.day} ${monthName(date.month)} ${date.year}';
+}
+
+String formatMonthYear(DateTime date) {
+  // Converts DateTime to a "Month Day" format (e.g., Jan 1)
+  return '${monthName(date.month)} ${date.year}';
 }
 
 String monthName(int month) {

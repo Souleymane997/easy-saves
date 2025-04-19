@@ -21,8 +21,8 @@ class Loading extends StatelessWidget {
   }
 }
 
-class Loadback extends StatelessWidget {
-  const Loadback({super.key});
+class LoadBack extends StatelessWidget {
+  const LoadBack({super.key});
 
   @override
   Widget build(BuildContext context) {

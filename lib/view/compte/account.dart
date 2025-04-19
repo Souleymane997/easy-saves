@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:easy_saves/models/user.dart';
+import 'package:easy_saves/view/compte/archive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
@@ -306,6 +307,39 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ),
           ),
+
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.05,
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: orangeFonce(),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    SlideRightRoute(
+                        child: ArchivePage(),
+                        page: ArchivePage(),
+                        direction: AxisDirection.left),
+                  );
+                },
+                child: CustomText(
+                  "Voir mes archives",
+                  color: noir(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -367,7 +401,7 @@ class Info extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.only(left: 5.0 , right: 5.0 , top: 3.0 , bottom: 3.0),
             child: CustomText(
               infoKey,
               color: blanc(),
@@ -375,7 +409,7 @@ class Info extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.only(left: 5.0 , right: 5.0 , top: 3.0 , bottom: 3.0),
             child: CustomText(
               info,
               color: blanc().withValues(alpha: 0.5),

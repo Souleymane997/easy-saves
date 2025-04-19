@@ -111,6 +111,8 @@ class AuthController {
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
 
+          print(doc) ;
+
           // Extraction des documents
           List<Map<String, dynamic>> documents = querySnapshot.docs.map((doc) {
             return doc.data() as Map<String, dynamic>;

@@ -13,12 +13,15 @@ import '../../shared/slidepage.dart';
 import '../navigationbody.dart';
 
 
-void showAddSeance(BuildContext context , String idCours) {
+
+
+void showAddSeance(BuildContext context , String idCours ) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       DateTime date = DateTime.now();
-      String dateData = formatDayMonthYear(date) ;
+      //String dateData = formatDayMonthYear(date) ;
+      String formattedDate = formatDate(date);
       int duree = 2 ;
       return AlertDialog(
         title: CustomText(
@@ -122,7 +125,7 @@ void showAddSeance(BuildContext context , String idCours) {
                   onPressed: () async {
                     loadPop(context) ;
                     if (duree > 0) {
-                      SeanceModel newSeance = SeanceModel(duree: duree, idCours: idCours , date: dateData);
+                      SeanceModel newSeance = SeanceModel(duree: duree, idCours: idCours , date: formattedDate);
                       bool res = await SeanceController().addSeance(newSeance) ;
                       if (res) {
                         DInfo.toastSuccess("Seance enregistrée avec success !");

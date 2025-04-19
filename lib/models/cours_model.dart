@@ -3,12 +3,14 @@ class CoursModel {
   late String titre;
   late int prix;
   late String numParent;
+  late bool archive ;
 
   CoursModel({
     required this.idUser,
     required this.titre,
     required this.prix,
-    required this.numParent
+    required this.numParent,
+    required this.archive
   });
 
 CoursModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ CoursModel.fromJson(Map<String, dynamic> json) {
     titre = json['titre'];
     prix= json['prix'];
     numParent = json['numParent'];
+    archive = json['archive'];
   }
 
   Map<String, dynamic> toJson() {
@@ -24,6 +27,7 @@ CoursModel.fromJson(Map<String, dynamic> json) {
     data['titre'] =  titre;
     data['prix'] = prix ;
     data['numParent'] = numParent ;
+    data['archive'] = archive ;
     return data;
   }
 

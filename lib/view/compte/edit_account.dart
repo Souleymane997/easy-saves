@@ -201,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 LoginInputReadOnly(
                     editController: emailController,
                     type: TextInputType.emailAddress,
-                    bgcolor: orange().withValues(alpha: 0.3),
+                    bgcolor: grisLight().withValues(alpha: 0.3),
                     curscolor: blanc(),
                     hint: " email"),
                 const SizedBox(
@@ -210,7 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 LoginInput(
                     editController: passwordController,
                     type: TextInputType.text,
-                    bgcolor: orange().withValues(alpha: 0.3),
+                    bgcolor: grisLight().withValues(alpha: 0.3),
                     curscolor: blanc(),
                     hint: " mot de passe"),
                 const SizedBox(
