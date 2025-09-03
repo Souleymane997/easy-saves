@@ -37,8 +37,11 @@ class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordConfirmController = TextEditingController();
+
 
   bool isHidden = true;
+  bool obscureConfirmPassword = true;
   bool load = false;
 
   late String keyUser;
@@ -62,7 +65,13 @@ class _SignUpState extends State<SignUp> {
     }
     return false;
   }
+
+
+
+
   ////**********************************************///
+
+
 
 
   @override
@@ -115,7 +124,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.07,
+                    height: MediaQuery.sizeOf(context).height * 0.04,
                   ),
                   Row(
                     children: [
@@ -131,7 +140,7 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.05,
+                    height: MediaQuery.sizeOf(context).height * 0.04,
                   ),
                   Form(
                     key: _formKey,
@@ -151,7 +160,7 @@ class _SignUpState extends State<SignUp> {
                             type: TextInputType.phone,
                             bgcolor: grisFonce(),
                             curscolor: blanc(),
-                            hint: " Telephone"),
+                            hint: "Telephone"),
                         const SizedBox(
                           height: 18,
                         ),
@@ -223,8 +232,76 @@ class _SignUpState extends State<SignUp> {
                             ],
                           ),
                         ),
+                        const SizedBox(
+                          height: 18,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(top: 1, bottom: 8),
+                          child: Column(
+                            children: [
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width:
+                                    MediaQuery.of(context).size.width * 0.9,
+                                    decoration: BoxDecoration(
+                                      color: grisFonce(),
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: TextFormField(
+                                        maxLines: 1,
+                                        cursorColor: blanc(),
+                                        controller: passwordConfirmController,
+                                        keyboardType: TextInputType.text,
+                                        onSaved: (onSavedval) {
+                                          passwordConfirmController.text = onSavedval!;
+                                        },
+                                        obscureText: obscureConfirmPassword,
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "Veuillez confirmer le mot de passe";
+                                          }
+                                          if (value != passwordController.text) {
+                                            return "Les mots de passe ne correspondent pas";
+                                          }
+                                          return null;
+                                        },
+                                        style: TextStyle(
+                                          color: blanc(),
+                                        ),
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                          hintText: " Confirmer Mot de passe ",
+                                          hintStyle: TextStyle(
+                                              color: blanc().withOpacity(0.25),
+                                              fontSize: 12),
+                                          suffixIcon: IconButton(
+                                            color:
+                                            (obscureConfirmPassword) ? gris() : orange(),
+                                            icon: Icon(obscureConfirmPassword
+                                                ? Icons.visibility_off
+                                                : Icons.visibility),
+                                            onPressed: () {
+                                              setState(() {
+                                                obscureConfirmPassword = !obscureConfirmPassword;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.1,
+                          height: MediaQuery.sizeOf(context).height * 0.05,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.75,
@@ -246,8 +323,6 @@ class _SignUpState extends State<SignUp> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (ctx) => EmailVerificationScreen()));
-                                 // DInfo.toastSuccess("Compte crée avec succès");
-
 
                                 });
                               } else {
@@ -301,21 +376,46 @@ class _SignUpState extends State<SignUp> {
         phoneController.text.isNotEmpty &&
         userNameController.text.isNotEmpty) {
 
-      if (validateEmail(emailController.text)) {
+      print(neCommencePasParPonctuation(userNameController.text)) ;
+
+      if (!neCommencePasParPonctuation(userNameController.text)) {
+        DInfo.toastError("Username non valid !");
+        return false;
+      }
+
+      if (validateEmail(emailController.text) || !neCommencePasParPonctuation(emailController.text)) {
         DInfo.toastError("Email non valid !");
         return false;
       }
 
-      if (passwordController.text.length < 6) {
-        DInfo.toastError("Mot de passe trop court !");
+      if (passwordController.text.length < 6 ) {
+        DInfo.toastError("Mot de passe trop court ! 6 lettres au moins .");
         return false;
       }
+
+      if (!neCommencePasParPonctuation(passwordController.text)) {
+        DInfo.toastError("Mot de passe invalid !");
+        return false;
+      }
+
+      if (!neCommencePasParPonctuation(phoneController.text)) {
+        DInfo.toastError("Telephone Incorrect !");
+        return false;
+      }
+
+      if (phoneController.text.length > 8 ||  phoneController.text.length < 8 ) {
+        DInfo.toastError("Telephone Incorrect !");
+        return false;
+      }
+
 
       user = await AuthController().signUpWithEmailAndDetails(
           emailController.text,
           userNameController.text,
           passwordController.text,
           phoneController.text);
+
+
 
       if (user != null) {
         //final uid = user?.uid;
@@ -324,6 +424,7 @@ class _SignUpState extends State<SignUp> {
         DInfo.toastError("une erreur est survenue !");
         return false;
       }
+
     } else {
       DInfo.toastError("Remplissez les champs svp !");
       return false;

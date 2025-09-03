@@ -9,6 +9,7 @@ import '../../shared/custom_text.dart';
 import '../../shared/dialoguetoast.dart';
 import '../../shared/slidepage.dart';
 import '../../view/signup/auth.dart';
+import '../../widget_tree.dart';
 import '../navigationbody.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
@@ -24,26 +25,29 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   late User? user = AuthController().currentUser;
 
   Timer? timer;
+
+
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    FirebaseAuth.instance.currentUser?.sendEmailVerification();
-    timer =
-        Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
+    timer = Timer.periodic(
+      const Duration(seconds: 5),
+          (_) => checkEmailVerified(),
+    );
   }
 
-  checkEmailVerified() async {
+  Future<void> checkEmailVerified() async {
     await FirebaseAuth.instance.currentUser?.reload();
-    setState(() {
-      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
-    });
-    if (isEmailVerified) {
-      // TODO: implement your code after email verification
-      DInfo.toastSuccess("Email Verifié avec Succès");
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && user.emailVerified) {
+      setState(() => isEmailVerified = true);
+      DInfo.toastSuccess("Email vérifié avec succès !");
       timer?.cancel();
     }
   }
+
 
   @override
   void dispose() {
@@ -116,7 +120,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Center(
                         child: CustomText(
-                          " Nous avons envoyé un lien à l'adresse mail  ${user?.email} ",
+                          " Nous avons envoyé un lien à l'adresse mail  ${user?.email}.\nVerifier vos mails ou vos Spam ",
                             textAlign: TextAlign.center
                         ),
                       ),
@@ -139,37 +143,38 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                       children: [
                         CupertinoButton(
                           color: CupertinoColors.inactiveGray,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 25.0, vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
                           child: CustomText(
-                            'Annuller',
+                            'Annuler',
                             tex: TailleText(context).soustitre,
                             fontWeight: FontWeight.w700,
                           ),
-                          onPressed: () {
-                            //Navigator.of(context).push(
-                            //   SlideRightRoute(
-                            //       child: NavigationPage(),
-                            //       page: NavigationPage(),
-                            //       direction: AxisDirection.up),
-                            // );
+                          onPressed: () async {
+                            await FirebaseAuth.instance.signOut(); // 🔥 Déconnexion
+                            Navigator.of(context).pushAndRemoveUntil(
+                              SlideRightRoute(
+                                child: const WidgetTree(),
+                                page: const WidgetTree(),
+                                direction: AxisDirection.up,
+                              ),
+                                  (route) => false,
+                            );
                           },
                         ),
                         CupertinoButton(
                           color: CupertinoColors.activeOrange,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 25.0, vertical: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
                           child: CustomText(
                             'Renvoyer',
                             tex: TailleText(context).soustitre,
                             fontWeight: FontWeight.w700,
                           ),
-                          onPressed: () {
+                          onPressed: () async {
                             try {
-                              FirebaseAuth.instance.currentUser
-                                  ?.sendEmailVerification();
+                              await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+                              DInfo.toastSuccess("Email de vérification renvoyé !");
                             } catch (e) {
-                              debugPrint('$e');
+                              DInfo.toastError("Erreur lors de l'envoi : $e");
                             }
                           },
                         )

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:easy_saves/models/cours_model.dart';
 import 'package:easy_saves/models/seance.dart';
 import 'package:easy_saves/view/recette/switch.dart';
+import 'package:easy_saves/view/compte/archive.dart';
 import 'package:flutter/material.dart';
 
 import '../shared/colors.dart';
@@ -37,7 +38,7 @@ class CardCours extends StatelessWidget {
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.height * 0.2,
+        height: MediaQuery.of(context).size.height * 0.27,
         decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(15.0),
@@ -68,7 +69,7 @@ class CardCours extends StatelessWidget {
             ),
             Container(
               width: 100,
-              height: 90,
+              height: 80,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50.0),
                   image: const DecorationImage(
@@ -79,7 +80,7 @@ class CardCours extends StatelessWidget {
             CustomText(
               item.titre.toUpperCase(),
               color: blanc(),
-              tex: TailleText(context).soustitre,
+              tex: (item.titre.length > 30 ) ? TailleText(context).contenu * 0.75 : ( (item.titre.length > 20 )? TailleText(context).contenu : TailleText(context).soustitre * 0.75),
             ),
             CustomText(
               " Seance : ${item.prix} F/H ",
@@ -190,8 +191,6 @@ class CoursDetailsCard extends StatelessWidget {
 }
 
 
-
-
 class CardCoursRecette extends StatelessWidget {
   const CardCoursRecette({super.key , required this.item , required this.nbre , required this.idCours , required this.cout , required this.date});
   final CoursModel item ;
@@ -210,7 +209,7 @@ class CardCoursRecette extends StatelessWidget {
       },
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
-        height: MediaQuery.of(context).size.height * 0.25,
+        height: MediaQuery.of(context).size.height * 0.5,
         decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(15.0),
@@ -240,13 +239,13 @@ class CardCoursRecette extends StatelessWidget {
               ],
             ),
             CustomText(
-              "${item.titre.toUpperCase()}",
+              item.titre.toUpperCase(),
               color: blanc(),
-              tex: TailleText(context).soustitre,
+              tex: (item.titre.length > 30 ) ? TailleText(context).contenu * 0.75 : ( (item.titre.length > 20 )? TailleText(context).contenu : TailleText(context).soustitre * 0.75),
             ),
             Container(
               width: 80,
-              height: 70,
+              height: 60,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(50.0),
                   image: const DecorationImage(
@@ -254,7 +253,6 @@ class CardCoursRecette extends StatelessWidget {
                     fit: BoxFit.contain,
                   )),
             ),
-
             CustomText(
               "prix : ${item.prix} F/H ",
               color: blanc(),
@@ -269,7 +267,7 @@ class CardCoursRecette extends StatelessWidget {
               "Total: $cout F",
               color: orange(),
               fontWeight: FontWeight.w500,
-              tex: TailleText(context).soustitre * 0.85,
+              tex: TailleText(context).soustitre * 0.75,
             ),
           ],
         ),
@@ -279,4 +277,55 @@ class CardCoursRecette extends StatelessWidget {
 }
 
 
+class CardCoursArchive extends StatelessWidget {
+  const CardCoursArchive({super.key , required this.item , required this.nbre , required this.idCours});
+  final CoursModel item ;
+  final int nbre ;
+  final String idCours ;
 
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onLongPress: () {
+        //showAddSeance(context , idCours );
+        setCoursArchive( context ,item, idCours) ;
+      },
+
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.height * 0.2,
+        decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border.all(color: Colors.green)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(height: 20,),
+            Container(
+              width: 100,
+              height: 90,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50.0),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/icon/logo.png'),
+                    fit: BoxFit.contain,
+                  )),
+            ),
+            CustomText(
+              item.titre.toUpperCase(),
+              color: blanc(),
+              tex: (item.titre.length > 30 ) ? TailleText(context).contenu * 0.75 : ( (item.titre.length > 20 )? TailleText(context).contenu : TailleText(context).soustitre * 0.75),
+            ),
+            CustomText(
+              " Seance : ${item.prix} F/H ",
+              // ignore: deprecated_member_use
+              color: blanc().withOpacity(0.5),
+              tex: TailleText(context).contenu,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

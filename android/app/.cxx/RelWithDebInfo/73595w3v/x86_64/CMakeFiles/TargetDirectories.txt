@@ -1,0 +1,2 @@
+/Users/admin/StudioProjects/easy_saves/android/app/.cxx/RelWithDebInfo/73595w3v/x86_64/CMakeFiles/edit_cache.dir
+/Users/admin/StudioProjects/easy_saves/android/app/.cxx/RelWithDebInfo/73595w3v/x86_64/CMakeFiles/rebuild_cache.dir

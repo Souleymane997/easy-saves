@@ -123,8 +123,8 @@ void showAddSeance(BuildContext context , String idCours ) {
                 padding: const EdgeInsets.only(right: 4.0, left: 8.0),
                 child:OutlinedButton(
                   onPressed: () async {
-                    loadPop(context) ;
                     if (duree > 0) {
+                      loadPop(context) ;
                       SeanceModel newSeance = SeanceModel(duree: duree, idCours: idCours , date: formattedDate);
                       bool res = await SeanceController().addSeance(newSeance) ;
                       if (res) {
@@ -141,6 +141,7 @@ void showAddSeance(BuildContext context , String idCours ) {
                         );
                       } else {
                         DInfo.toastError("une erreur est survenue !");
+                        Navigator.pop(context) ;
                       }
                     } else {
                       DInfo.toastError("Valeur incorrecte! Réessayer svp! ");

@@ -12,7 +12,7 @@ class CoursController {
 
 
 
-  Future<List<String>> getListIDCours(String? idUser , String? searchQuery) async {
+  Future<List<String>> getListIDCours(String? idUser , String? searchQuery , bool val) async {
     List<String> result = [];
     QuerySnapshot querySnapshot ;
     try {
@@ -21,13 +21,15 @@ class CoursController {
          querySnapshot = await FirebaseFirestore.instance
             .collection('Cours')
             .where('idUser', isEqualTo: idUser)
-            .where('titre', arrayContains: searchQuery)
-            .get();
+             .where('archive',isEqualTo: val )
+             .where('titre', arrayContains: searchQuery)
+             .get();
       }
       else{
         querySnapshot = await FirebaseFirestore.instance
             .collection('Cours')
             .where('idUser', isEqualTo: idUser)
+            .where('archive',isEqualTo: val )
             .get();
       }
 
@@ -39,6 +41,9 @@ class CoursController {
       } else {
         print("Aucun document trouvé.");
       }
+
+
+
       return result ;
 
     } catch (e) {
@@ -50,12 +55,12 @@ class CoursController {
 
 
 
-  Future<List<CoursModel>> getListCours(String? idUser) async {
+  Future<List<CoursModel>> getListCours(String? idUser,bool val) async {
     List<CoursModel> result = [];
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection('Cours')
-          .where('idUser', isEqualTo: idUser).where('archive', isEqualTo: false)
+          .where('idUser', isEqualTo: idUser).where('archive', isEqualTo: val)
           .get();
 
           // Extraction des documents
@@ -152,6 +157,7 @@ class CoursController {
         'numParent': item.numParent,
         'archive':val
       }) ;
+
       if(val){
         print("Archivé avec succès !");
       }

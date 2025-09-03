@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:easy_saves/view/signup/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'email_verification_page.dart';
 
 import '../../component/bg.dart';
 import '../../component/buttoncard.dart';
@@ -52,13 +53,14 @@ class _LoginState extends State<Login> {
     });
   }
 
-  bool validateEmail(String? email){
-    RegExp emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') ;
-    final isEmailValid = emailRegex.hasMatch(email??"") ;
-    if(!isEmailValid){
-      return true ;
+  bool validateEmail(String? email) {
+    RegExp emailRegex = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+    final isEmailValid = emailRegex.hasMatch(email ?? "");
+    if (!isEmailValid) {
+      return true;
     }
-    return false ;
+    return false;
   }
 
 
@@ -77,7 +79,10 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.08,
                   ),
                   Container(
                     margin: const EdgeInsets.all(8),
@@ -89,28 +94,30 @@ class _LoginState extends State<Login> {
                       children: [
                         Expanded(
                             child: ButtonCard(
-                          text: "Se connecter",
-                          color: orange(),
-                          x: Login(toggleView: widget.toggleView),
-                          textcolor: noir(),
-                          taille: 0.3,
-                        )),
+                              text: "Se connecter",
+                              color: orange(),
+                              x: Login(toggleView: widget.toggleView),
+                              textcolor: noir(),
+                              taille: 0.3,
+                            )),
                         const SizedBox(
                           width: 5,
                         ),
                         Expanded(
                             child: ButtonCard(
-                          text: "Creer compte",
-                          color: noir(),
-                          x: SignUp(toggleView: widget.toggleView),
-                          textcolor: orange(),
-                          taille: 0.3,
-                        )),
+                              text: "Creer compte",
+                              color: noir(),
+                              x: SignUp(toggleView: widget.toggleView),
+                              textcolor: orange(),
+                              taille: 0.3,
+                            )),
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.07,
+                    height: MediaQuery
+                        .sizeOf(context)
+                        .height * 0.07,
                   ),
                   Row(
                     children: [
@@ -126,7 +133,9 @@ class _LoginState extends State<Login> {
                     ],
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.025,
+                    height: MediaQuery
+                        .sizeOf(context)
+                        .height * 0.025,
                   ),
                   Form(
                     key: _formKey,
@@ -148,7 +157,10 @@ class _LoginState extends State<Login> {
                                 children: [
                                   Container(
                                     width:
-                                        MediaQuery.of(context).size.width * 0.9,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width * 0.9,
                                     decoration: BoxDecoration(
                                       color: grisFonce(),
                                       borderRadius: BorderRadius.circular(15.0),
@@ -163,7 +175,10 @@ class _LoginState extends State<Login> {
                                         onSaved: (onSavedval) {
                                           passwordController.text = onSavedval!;
                                         },
-                                        validator: (val) => (val!.length < 6 )? "Mot de passe trop court" :  null,
+                                        validator: (val) =>
+                                        (val!.length < 6)
+                                            ? "Mot de passe trop court"
+                                            : null,
                                         obscureText: isHidden,
                                         style: TextStyle(
                                           color: blanc(),
@@ -176,7 +191,7 @@ class _LoginState extends State<Login> {
                                               fontSize: 12),
                                           suffixIcon: IconButton(
                                             color:
-                                                (isHidden) ? gris() : orange(),
+                                            (isHidden) ? gris() : orange(),
                                             icon: Icon(isHidden
                                                 ? Icons.visibility_off
                                                 : Icons.visibility),
@@ -219,47 +234,39 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.025,
+                          height: MediaQuery
+                              .sizeOf(context)
+                              .height * 0.025,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.75,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              closeKeyboard(context);
-                              setState(() {
-                                load = true;
-                              });
+                              onPressed: () async {
+                                closeKeyboard(context);
+                                setState(() => load = true);
 
-                              _formKey.currentState!.validate() ;
+                                if (_formKey.currentState!.validate()) {
+                                  final result = await validateAndSave();
 
-                              if (await validateAndSave()) {
-                                Timer(const Duration(seconds: 2), () {
-                                  setState(() {
-                                    load = false;
-                                  });
-                                  Navigator.of(context).push(
-                                    SlideRightRoute(
-                                        child: NavigationPage(),
-                                        page: NavigationPage(),
-                                        direction: AxisDirection.up),
-                                  );
-                                });
-                              }
-                              else{
-                                Timer(const Duration(seconds: 2), () {
-                                  setState(() {
-                                    load = false;
-                                  });
-                                });
-                              }
-                            },
-                            style: ButtonStyle(
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(orange()),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                                  if (result == LoginResult.success) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => NavigationPage()),
+                                    );
+                                  } else if (result == LoginResult.emailNotVerified) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => EmailVerificationScreen()),
+                                    );
+                                  }
+                                }
+
+                                setState(() => load = false);
+                              },
+                              style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              backgroundColor: MaterialStateProperty.all<Color>(orange()),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -277,7 +284,9 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.05,
+                          height: MediaQuery
+                              .sizeOf(context)
+                              .height * 0.05,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -290,20 +299,11 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                         SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.05,
+                          height: MediaQuery
+                              .sizeOf(context)
+                              .height * 0.05,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ButtonOthers(
-                              text: "Se connecter sans Compte",
-                              color: blanc(),
-                              x: NavigationPage(),
-                              textcolor: noir(),
-                              taille: 0.75
-                            )
-                          ],
-                        )
+
                       ],
                     ),
                   ),
@@ -317,36 +317,55 @@ class _LoginState extends State<Login> {
           ]),
         ));
   }
+  Future<LoginResult> validateAndSave() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
 
-  // verifie les champs de saisie
-  Future<bool> validateAndSave() async {
-
-    if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-
-      if( validateEmail(emailController.text) ) {
-        DInfo.toastError("Email non valid !");
-        return false;
-      }
-
-      if( passwordController.text.length < 6 ) {
-        DInfo.toastError("Mot de passe trop court !");
-        return false;
-      }
-      user = await AuthController().signInWithEmailAndPassword(
-          emailController.text, passwordController.text);
-
-
-      if (user != null) {
-        DInfo.toastSuccess(
-            "Connexion etablie avec succes");
-        return true;
-      } else {
-        DInfo.toastError("une erreur est survenue !");
-        return false;
-      }
-    } else {
+    if (email.isEmpty || password.isEmpty) {
       DInfo.toastError("Remplissez les champs svp !");
-      return false;
+      return LoginResult.error;
     }
+
+    if (validateEmail(email) || !neCommencePasParPonctuation(email)) {
+      DInfo.toastError("Email non valide !");
+      return LoginResult.error;
+    }
+
+    if (password.length < 6 || !neCommencePasParPonctuation(password)) {
+      DInfo.toastError("Mot de passe incorrect !");
+      return LoginResult.error;
+    }
+
+    // 👉 Essayer connexion
+    User? tempUser = await AuthController().signInWithEmailAndPassword(email, password);
+
+    if (tempUser == null) {
+      DInfo.toastError("Email ou mot de passe incorrect !");
+      return LoginResult.error;
+    }
+
+    await tempUser.reload();
+    tempUser = FirebaseAuth.instance.currentUser;
+
+    // 👉 Vérifier si email vérifié
+    if (tempUser != null && !tempUser.emailVerified) {
+      DInfo.toastError("Veuillez valider votre compte !");
+      //await FirebaseAuth.instance.signOut(); // 🔥 Déconnecter directement
+      return LoginResult.emailNotVerified;
+    }
+
+
+    user = tempUser;
+
+    DInfo.toastSuccess("Connexion établie avec succès");
+    return LoginResult.success;
   }
+
+
+}
+
+enum LoginResult {
+  success,               // email vérifié → NavigationPage
+  emailNotVerified,      // email pas vérifié → EmailVerificationScreen
+  error                  // email/mdp incorrect ou champs invalides
 }

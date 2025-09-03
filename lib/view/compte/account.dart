@@ -17,6 +17,9 @@ import '../../shared/slidepage.dart';
 import '../../widget_tree.dart';
 import '../signup/auth.dart';
 import 'edit_account.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -65,22 +68,33 @@ class _AccountPageState extends State<AccountPage> {
                       borderRadius: BorderRadius.circular(10), // Rounded corners
                     ),
 
-                    child: Center(child: Icon(Icons.logout , size: 30,)))),
+                    child: Center(child: Icon(Icons.logout , size: 25,)))),
               )
             ],
           )
         ],
       ),
       body: exit
-          ? Stack(children: [
-              const Background(),
-              profilScreen(),
-            ])
+          ? SafeArea(
+            child: Stack(children: [
+                const Background(),
+                profilScreen(),
+              ]),
+          )
           : Loading()
     );
 
-
   }
+
+  Future<void> openLink(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication); // ou LaunchMode.inAppWebView
+    } else {
+      throw 'Impossible d\'ouvrir ce lien : $url';
+    }
+  }
+
 
 
   showPop(BuildContext context){
@@ -88,16 +102,13 @@ class _AccountPageState extends State<AccountPage> {
     showAdaptiveActionSheet(
       context: context,
       isDismissible: true,
-      bottomSheetColor: Colors.black87,
+      bottomSheetColor: noir(),
       androidBorderRadius: 30,
       actions: <BottomSheetAction>[
         BottomSheetAction(
             title: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: CustomText('Se deconnecter ' , tex: TailleText(context).soustitre * 1.4 , color: Colors.red, fontWeight: FontWeight.w700,),
-                ),
+                CustomText('Se deconnecter ' , tex: TailleText(context).soustitre * 1.4 , color: Colors.red, fontWeight: FontWeight.w700,),
                 Divider(), // Line Divider
               ],
             ),
@@ -118,7 +129,21 @@ class _AccountPageState extends State<AccountPage> {
                       builder: ((context) => const WidgetTree())),
                 );
               });
-
+            }
+        ),
+        BottomSheetAction(
+            title: Column(
+              children: [
+                CustomText('Supprimer mon compte' , tex: TailleText(context).soustitre * 1.4 , color: Colors.red, fontWeight: FontWeight.w700,),
+                Divider(), // Line Divider
+              ],
+            ),
+            onPressed: (_) {
+              openLink('https://souleymane997.github.io/easy_back/');
+              Navigator.pop(context);
+              Timer(const Duration(milliseconds: 1500), () async {
+                DInfo.toastSuccess("Demande envoyé. votre demande sera pris en compte dans 3 jours");
+              });
             }
 
 
@@ -127,10 +152,7 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ],
 
-      cancelAction: CancelAction(title: Padding(
-        padding: const EdgeInsets.all(3.0),
-        child: Text('Annuler'),
-      )),// onPressed parameter is optional by default will dismiss the ActionSheet
+      cancelAction: CancelAction(title: Text('Annuler')),// onPressed parameter is optional by default will dismiss the ActionSheet
     );
   }
 
@@ -206,22 +228,22 @@ class _AccountPageState extends State<AccountPage> {
             children: [
               Container(
                 width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.07,
                 color: orange().withValues(alpha: 0.3),
               ),
               Center(
                   child: CircleAvatar(
-                      radius: 60,
+                      radius: 50,
                       backgroundColor: Colors.grey[300],
                       child: Icon(Icons.person,
-                          size: 60, color: Colors.grey[700])))
+                          size: 50, color: Colors.grey[700])))
             ],
           ),
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: CustomText(
               userInfo.username.toUpperCase(),
-              tex: TailleText(context).titre,
+              tex: TailleText(context).titre * 0.75,
               color: blanc(),
             ),
           ),
@@ -277,7 +299,7 @@ class _AccountPageState extends State<AccountPage> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.05,
+            height: MediaQuery.of(context).size.height * 0.065,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -309,7 +331,7 @@ class _AccountPageState extends State<AccountPage> {
           ),
 
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.05,
+            height: MediaQuery.of(context).size.height * 0.025,
           ),
 
           Padding(
@@ -318,7 +340,7 @@ class _AccountPageState extends State<AccountPage> {
               width: 200,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: orangeFonce(),
+                  backgroundColor: Colors.green,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 48),
                   shape: RoundedRectangleBorder(
@@ -328,8 +350,8 @@ class _AccountPageState extends State<AccountPage> {
                 onPressed: () {
                   Navigator.of(context).push(
                     SlideRightRoute(
-                        child: ArchivePage(),
-                        page: ArchivePage(),
+                        child: ArchivePage(val: 0),
+                        page: ArchivePage(val: 0),
                         direction: AxisDirection.left),
                   );
                 },
@@ -377,7 +399,7 @@ class ProfilePic extends StatelessWidget {
         ),
       ),
       child: CircleAvatar(
-        radius: 60,
+        radius: MediaQuery.of(context).size.height * 0.01,
         backgroundImage: NetworkImage(image),
       ),
     );
@@ -396,12 +418,12 @@ class Info extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
+      padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.015),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 5.0 , right: 5.0 , top: 3.0 , bottom: 3.0),
+            padding: const EdgeInsets.only(left: 10.0 , right: 5.0 ),
             child: CustomText(
               infoKey,
               color: blanc(),
@@ -409,7 +431,7 @@ class Info extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 5.0 , right: 5.0 , top: 3.0 , bottom: 3.0),
+            padding: const EdgeInsets.only(left: 5.0 , right: 10.0 ),
             child: CustomText(
               info,
               color: blanc().withValues(alpha: 0.5),

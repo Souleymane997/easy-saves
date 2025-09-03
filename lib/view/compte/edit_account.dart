@@ -15,6 +15,9 @@ import '../../shared/slidepage.dart';
 import '../navigationbody.dart';
 import '../signup/auth.dart';
 
+
+
+
 class EditAccount extends StatefulWidget {
   const EditAccount({super.key});
 

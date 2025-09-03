@@ -19,11 +19,12 @@ class CustomText extends Text {
             fontSize: 15.0,
             fontFamily: family,
             fontWeight: fontWeight,
-            
+
           ),
           maxLines: 10,
-          
+
         );
+
 }
 
 class TailleText {

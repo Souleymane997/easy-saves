@@ -50,6 +50,14 @@ Widget loadingContainer(BuildContext context) {
   );
 }
 
+bool neCommencePasParPonctuation(String texte) {
+  const List<String> ponctuations = ['.', ',', '!', '?', '…'];
+
+  if (texte.isEmpty) return true;
+
+  return !ponctuations.contains(texte[0]);
+}
+
 
 
 void loadPop(BuildContext context) {

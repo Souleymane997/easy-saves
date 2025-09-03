@@ -69,7 +69,7 @@ class _SwitchPageState extends State<SwitchPage> {
 
 
   loadPage() {
-    Timer(Duration(milliseconds: 500), () {
+    Timer(Duration(milliseconds: 2000), () {
       setState(() {
         isLoad = false ;
       });
@@ -94,7 +94,7 @@ class _SwitchPageState extends State<SwitchPage> {
       }
 
       List<CoursModel>  list =
-      await CoursController().getListCours(user!.uid);
+      await CoursController().getListCours(user!.uid,false);
 
       setState(() {
         listCours = list ;
@@ -113,7 +113,7 @@ class _SwitchPageState extends State<SwitchPage> {
     if (user != null) {
 
       List<String>  list =
-      await CoursController().getListIDCours(user!.uid , "");
+      await CoursController().getListIDCours(user!.uid , "",false);
       setState(() {
         listID = list ;
       });
@@ -312,6 +312,7 @@ class _DetailsHeadersState extends State<DetailsHeaders> {
   late DateTime startDate ;
   late DateTime endDate ;
   int recette = 0 ;
+  bool load = true ;
 
 
 
@@ -330,6 +331,10 @@ class _DetailsHeadersState extends State<DetailsHeaders> {
       });
 
     }
+
+    setState(() {
+      load = false ;
+    });
   }
 
 
@@ -475,14 +480,19 @@ class _DetailsHeadersState extends State<DetailsHeaders> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CustomText(
-              "Mois de ${monthName(date.month).toUpperCase()} : $recette FCFA",
-              color: blanc(),
-              fontWeight: FontWeight.w700,
+          load
+              ? Center(
+            child: SpinKitCircle(
+              color: orange(),
+              size: 30.0,
             ),
+          )
+              : CustomText(
+            "Mois de ${monthName(date.month).toUpperCase()} : $recette FCFA",
+            color: blanc(),
+            fontWeight: FontWeight.w700,
           ),
+
         ],
       ),
     );

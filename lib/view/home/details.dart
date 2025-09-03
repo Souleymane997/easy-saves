@@ -11,6 +11,7 @@ import '../signup/auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../shared/dialoguetoast.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 import '../../component/bg.dart';
 import '../../component/cardCours.dart';
@@ -108,7 +109,7 @@ class _DetailsCoursPageState extends State<DetailsCoursPage> {
     showCupertinoModalPopup(
       context: context,
       builder: (_) => Container(
-        height: MediaQuery.of(context).size.height * 0.4,
+        height: MediaQuery.of(context).size.height * 0.41,
         color: blanc(),
         child: Column(
           children: [
@@ -131,19 +132,17 @@ class _DetailsCoursPageState extends State<DetailsCoursPage> {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: CupertinoButton(
-                color: orangeFonce(),
-                child: CustomText(
-                  'Fait',
-                  color: noir(),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
+            CupertinoButton(
+              color: orangeFonce(),
+              child: CustomText(
+                'Fait',
+                color: noir(),
               ),
-            )
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            SizedBox(height: 20,)
           ],
         ),
       ),
@@ -213,12 +212,19 @@ class _DetailsCoursPageState extends State<DetailsCoursPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomText(
-                              widget.cours.titre.toUpperCase(),
-                              family: 'RobotoItalic',
-                              tex: TailleText(context).titre * 1.3,
-                              fontWeight: FontWeight.w700,
+                            AutoSizeText(
+                              (widget.cours.titre.length > 35
+                                  ? widget.cours.titre.substring(0, 25) + "..."
+                                  : widget.cours.titre).toUpperCase(),
+                              style: TextStyle(
+                                color: blanc(),
+                                fontFamily: 'RobotoItalic',
+                                fontSize: (widget.cours.titre.length > 30 ) ? 13 : ( (widget.cours.titre.length > 20 )? 15: 20),
+                                fontWeight: FontWeight.w700,
+                              ),
                               textAlign: TextAlign.center,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ],
                         ),

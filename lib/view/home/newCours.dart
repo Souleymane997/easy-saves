@@ -163,10 +163,27 @@ class _NewCoursPageState extends State<NewCoursPage> {
         tarifController.text.isNotEmpty &&
         phoneParentController.text.isNotEmpty) {
 
-      bool checked = await CoursController().addCourseWithTransaction(intituleController.text) ;
+      if (!neCommencePasParPonctuation(intituleController.text.trim())) {
+        DInfo.toastError("Intitulé non valide !");
+        return false;
+      }
 
-      print(intituleController.text) ;
-      print(checked) ;
+      if (!neCommencePasParPonctuation(tarifController.text.trim())) {
+        DInfo.toastError("Tarif non valide !");
+        return false;
+      }
+
+      if (!neCommencePasParPonctuation(phoneParentController.text.trim())) {
+        DInfo.toastError("Telephone non valide !");
+        return false;
+      }
+
+      if (phoneParentController.text.length > 8 ||  phoneParentController.text.length < 8 ) {
+        DInfo.toastError("Telephone Incorrect !");
+        return false;
+      }
+
+      bool checked = await CoursController().addCourseWithTransaction(intituleController.text) ;
 
       if(checked == true ){
         DInfo.toastError("Ce Cours existe déjà ! Changez le titre svp  ");
@@ -174,8 +191,6 @@ class _NewCoursPageState extends State<NewCoursPage> {
       }
       else{
 
-
-        print("entrre ici iiiii") ;
         CoursModel newCours = CoursModel(idUser:user!.uid, titre: intituleController.text, prix: int.parse(tarifController.text),
             numParent: phoneParentController.text , archive: false) ;
 
@@ -223,7 +238,7 @@ void showNewsCours(BuildContext context) {
         padding: EdgeInsets.only(bottom: viewInsets.bottom),
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 5),
-          height: MediaQuery.of(context).size.height * 0.55,
+          height: MediaQuery.of(context).size.height * 0.58,
           child: Stack(children: [
               const Background(),
               Padding(
@@ -243,6 +258,9 @@ void showNewsCours(BuildContext context) {
                       height: 20,
                     ),
                     const NewCoursPage(),
+                    SizedBox(
+                      height: 5,
+                    ),
                   ],
                 ),
               )

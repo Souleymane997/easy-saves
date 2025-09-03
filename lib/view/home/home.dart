@@ -16,8 +16,11 @@ import '../../controllers/seance_controller.dart';
 import '../../models/seance.dart';
 import '../../shared/colors.dart';
 import '../../shared/custom_text.dart';
+import '../../shared/slidepage.dart';
 import '../signup/auth.dart';
+import 'help.dart';
 import 'newCours.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -150,11 +153,10 @@ class _HomePageState extends State<HomePage> {
   /* *************************************************/
 
   loadPage() {
-    Timer(Duration(milliseconds: 500), () {
+    Timer(Duration(milliseconds: 2000), () {
       setState(() {
         isLoad = false ;
       });
-      //print("5 secondes écoulées !");
     });
   }
 
@@ -201,7 +203,7 @@ class _HomePageState extends State<HomePage> {
         }
 
         List<CoursModel>  list =
-        await CoursController().getListCours(user!.uid);
+        await CoursController().getListCours(user!.uid,false);
 
         setState(() {
           listCours = list ;
@@ -221,7 +223,7 @@ class _HomePageState extends State<HomePage> {
       if (user != null) {
 
         List<String>  list =
-        await CoursController().getListIDCours(user!.uid , searchController.text);
+        await CoursController().getListIDCours(user!.uid , searchController.text,false);
 
         setState(() {
           listID = list ;
@@ -280,6 +282,19 @@ class HomeHeader extends StatelessWidget {
               tex: TailleText(context).titre * 1.5,
               textAlign: TextAlign.left,
             ),
+            Spacer(),
+            IconButton(onPressed: (){
+              Navigator.of(context).push(
+                SlideRightRoute(
+                    child: HelpPage(val: 0),
+                    page: HelpPage(val: 0),
+                    direction: AxisDirection.left),
+              );
+            }, icon: Icon(Icons.help, color: blanc() )),
+            Container(
+              width: 15,
+            )
+
           ],
         ),
         Row(
